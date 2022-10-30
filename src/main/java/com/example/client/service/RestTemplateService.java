@@ -1,5 +1,6 @@
 package com.example.client.service;
 
+import com.example.client.dto.UserRequest;
 import com.example.client.dto.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,5 +32,29 @@ public class RestTemplateService {
         System.out.println(result.getBody());
 
         return result.getBody();
+    }
+
+    public UserResponse post(){
+        URI uri = UriComponentsBuilder
+                .fromUriString("http://localhost:9090")
+                .path("/api/server/user/{userId}/name/{userName}")
+                .encode()
+                .build()
+                .expand(35, "ruben")
+                .toUri();
+        System.out.println(uri);
+
+        UserRequest req = new UserRequest();
+        req.setName("ruben");
+        req.setAge(35);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<UserResponse> response = restTemplate.postForEntity(uri, req, UserResponse.class);
+        System.out.println(response.getStatusCode());
+        System.out.println(response.getHeaders());
+        System.out.println(response.getBody());
+
+        return response.getBody();
+
     }
 }
